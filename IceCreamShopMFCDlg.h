@@ -48,4 +48,13 @@ public:
 	afx_msg void OnBnClickedDessertkindrdpancake();
 	afx_msg void OnBnClickedDessertkindrdcheesecake();
 	afx_msg void OnBnClickedDessertaddbtn();
+	int IceCreamFlavorRd;
+	afx_msg void OnBnClickedIcflavorrdchocolate();
+	afx_msg void OnBnClickedIcflavorrdvanilla();
+	afx_msg void OnBnClickedIcflavorrdmixed();
+	int IceCreamSizeRd;
+	afx_msg void OnBnClickedIcsizerdsmall();
+	afx_msg void OnBnClickedIcsizerdmedium();
+	afx_msg void OnBnClickedIcsizerdlarge();
+	afx_msg void OnBnClickedIcecreamaddbtn();
 };

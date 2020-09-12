@@ -63,6 +63,8 @@ CIceCreamShopMFCDlg::CIceCreamShopMFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_ICECREAMSHOPMFC_DIALOG, pParent)
 	, DessertSizeRd(0)
 	, DessertKindRd(0)
+	, IceCreamFlavorRd(0)
+	, IceCreamSizeRd(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -74,6 +76,10 @@ void CIceCreamShopMFCDlg::DoDataExchange(CDataExchange* pDX)
 	DDV_MinMaxInt(pDX, DessertSizeRd, 1, 3);
 	DDX_Radio(pDX, DessertKindRdWaffle, DessertKindRd);
 	DDV_MinMaxInt(pDX, DessertKindRd, 1, 3);
+	DDX_Radio(pDX, ICFlavorRdChocolate, IceCreamFlavorRd);
+	DDV_MinMaxInt(pDX, IceCreamFlavorRd, 1, 3);
+	DDX_Radio(pDX, ICSizeRdSmall, IceCreamSizeRd);
+	DDV_MinMaxInt(pDX, IceCreamSizeRd, 1, 3);
 }
 
 BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
@@ -87,6 +93,13 @@ BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
 	ON_BN_CLICKED(DessertKindRdPancake, &CIceCreamShopMFCDlg::OnBnClickedDessertkindrdpancake)
 	ON_BN_CLICKED(DessertKindRdCheesecake, &CIceCreamShopMFCDlg::OnBnClickedDessertkindrdcheesecake)
 	ON_BN_CLICKED(DessertAddBtn, &CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn)
+	ON_BN_CLICKED(ICFlavorRdChocolate, &CIceCreamShopMFCDlg::OnBnClickedIcflavorrdchocolate)
+	ON_BN_CLICKED(ICFlavorRdVanilla, &CIceCreamShopMFCDlg::OnBnClickedIcflavorrdvanilla)
+	ON_BN_CLICKED(ICFlavorRdMixed, &CIceCreamShopMFCDlg::OnBnClickedIcflavorrdmixed)
+	ON_BN_CLICKED(ICSizeRdSmall, &CIceCreamShopMFCDlg::OnBnClickedIcsizerdsmall)
+	ON_BN_CLICKED(ICSizeRdMedium, &CIceCreamShopMFCDlg::OnBnClickedIcsizerdmedium)
+	ON_BN_CLICKED(ICSizeRdLarge, &CIceCreamShopMFCDlg::OnBnClickedIcsizerdlarge)
+	ON_BN_CLICKED(IceCreamAddBtn, &CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn)
 END_MESSAGE_MAP()
 
 
@@ -179,6 +192,7 @@ HCURSOR CIceCreamShopMFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+// ===================== Dessert Selection Pane =====================
 
 // Dessert Size Radio handler:
 void CIceCreamShopMFCDlg::OnBnClickedDessertsizerdsmall()
@@ -245,26 +259,11 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertkindrdcheesecake()
 }
 
 // Dessert Add Button handler:
-
 void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 {
 	sizeOption DessertSizeOption = S;
 	dessertOption DessertKindOption = waffle;
 	CString DessertName = _T("General");
-
-	// What size has been selected:
-	switch (DessertSizeRd)
-	{
-	case 1:
-		DessertSizeOption = S;
-		break;
-	case 2:
-		DessertSizeOption = M;
-		break;
-	case 3:
-		DessertSizeOption = L;
-		break;
-	}
 
 	// What kind has been selected:
 	switch (DessertKindRd)
@@ -283,10 +282,145 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 		break;
 	}
 
+	// What size has been selected:
+	switch (DessertSizeRd)
+	{
+	case 1:
+		DessertSizeOption = S;
+		break;
+	case 2:
+		DessertSizeOption = M;
+		break;
+	case 3:
+		DessertSizeOption = L;
+		break;
+	}
+
 	//Creating instance of Dessert with the size and kind selected:
-	Dessert ds(DessertName, DessertKindOption, DessertSizeOption);
+	Dessert OrderedDessert(DessertName, DessertKindOption, DessertSizeOption);
 	AfxMessageBox(_T("Dessert added successfully !"));
 
 	// TODO: adding the dessert to list to display,
 
 }
+
+// ==================================================================
+
+
+// ===================== IceCream Selection Pane ====================
+
+// IceCream Flavor Radio handler:
+void CIceCreamShopMFCDlg::OnBnClickedIcflavorrdchocolate()
+{
+	// IceCream Chocolate Flavor Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(ICFlavorRdChocolate);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		IceCreamFlavorRd = 1;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedIcflavorrdvanilla()
+{
+	// IceCream Vanilla Flavor Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(ICFlavorRdVanilla);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		IceCreamFlavorRd = 2;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedIcflavorrdmixed()
+{
+	// IceCream Mixed Flavor Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(ICFlavorRdMixed);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		IceCreamFlavorRd = 3;
+	}
+}
+
+// IceCream CupSize Radio handler:
+void CIceCreamShopMFCDlg::OnBnClickedIcsizerdsmall()
+{
+	// IceCream Small Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(ICSizeRdSmall);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		IceCreamSizeRd = 1;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedIcsizerdmedium()
+{
+	// IceCream Medium Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(ICSizeRdMedium);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		IceCreamSizeRd = 2;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedIcsizerdlarge()
+{
+	// IceCream Large Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(ICSizeRdLarge);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		IceCreamSizeRd = 3;
+	}
+}
+
+void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
+{
+	sizeOption IceCreamSizeOption = S;
+	flavorOption IceCreamFlavorOption = chocolate;
+	CString IceCreamName = _T("General");
+	
+	// What kind has been selected:
+	switch (IceCreamFlavorRd)
+	{
+	case 1:
+		IceCreamFlavorOption = chocolate;
+		IceCreamName = _T("Chocolate IceCream");
+		break;
+	case 2:
+		IceCreamFlavorOption = vanilla;
+		IceCreamName = _T("Vanilla IceCream");
+		break;
+	case 3:
+		IceCreamFlavorOption = mixed;
+		IceCreamName = _T("Mixed IceCream");
+		break;
+	}
+
+	// What size has been selected:
+	switch (IceCreamSizeRd)
+	{
+	case 1:
+		IceCreamSizeOption = S;
+		break;
+	case 2:
+		IceCreamSizeOption = M;
+		break;
+	case 3:
+		IceCreamSizeOption = L;
+		break;
+	}
+
+
+	//Creating instance of Dessert with the size and kind selected:
+	IceCream OrederedIceCream(IceCreamName,IceCreamSizeOption,IceCreamFlavorOption);
+	AfxMessageBox(_T("IceCream added successfully !"));
+
+	// TODO: adding the dessert to list to display,
+
+}
+
+// ==================================================================
+
+
+
+
