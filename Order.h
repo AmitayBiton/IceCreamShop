@@ -14,6 +14,8 @@ private:
 public:
 	Order();
 	double calculateTotalPrice();
+	int getAmmount();
+	int getOrderNumber();
 	void addProduct(Product* prd);
 	void removeProduct(Product* prd);
 };

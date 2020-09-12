@@ -20,6 +20,16 @@ double Order::calculateTotalPrice()
 	return sum;
 }
 
+int Order::getAmmount()
+{
+	return ammount;
+}
+
+int Order::getOrderNumber()
+{
+	return OrderNumber;
+}
+
 void Order::addProduct(Product* prd)
 {
 	products.push_back(prd);

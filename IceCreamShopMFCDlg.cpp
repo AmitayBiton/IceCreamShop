@@ -158,8 +158,9 @@ BOOL CIceCreamShopMFCDlg::OnInitDialog()
 	
 	display.InsertColumn(0,L"Name",LVCFMT_LEFT,100);
 	display.InsertColumn(1, L"Size", LVCFMT_LEFT, 75);
-	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 275);
+	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 325);
 	display.InsertColumn(3, L"Price", LVCFMT_LEFT, 75);
+	display.InsertColumn(4, L"id", LVCFMT_LEFT, 75);
 	
 
 
@@ -291,7 +292,7 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 	int nItem;
 	sizeOption DessertSizeOption = S;
 	dessertOption DessertKindOption = waffle;
-	CString DessertName = _T("Waffle"), price = _T(""), size = _T("Small");
+	CString DessertName = _T("Waffle"), price = _T(""), size = _T("Small"), totalPrice = _T(""),id=_T("");
 
 	// What kind has been selected:
 	switch (DessertKindRd)
@@ -330,16 +331,18 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 	//Creating instance of Dessert with the size and kind selected and adding to MyOrder
 	Dessert* OrderedDessert = new Dessert(DessertName, DessertKindOption, DessertSizeOption);
 	MyOrder.addProduct(OrderedDessert);
-	
+	id.Format(_T("%d"), MyOrder.getAmmount());
+
 	//adding new line to list control
 	nItem = display.InsertItem(0, DessertName);
 	price.Format(_T("%g ₪"), OrderedDessert->getPrice());
 	display.SetItemText(nItem, 1, size);
 	display.SetItemText(nItem, 3, price);
-
-	//AfxMessageBox(_T("Dessert added successfully !"));
-
-	// TODO: adding the dessert to list to display,
+	display.SetItemText(nItem, 4, id);
+	
+	// Update Total Price on Pay Now Button
+	totalPrice.Format(_T("Pay (total: %g₪)"), MyOrder.calculateTotalPrice());
+	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 
 }
 
@@ -418,7 +421,7 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 	int nItem;
 	sizeOption IceCreamSizeOption = S;
 	flavorOption IceCreamFlavorOption = chocolate;
-	CString IceCreamName = _T("Ice Cream"), price = _T(""), size = _T("Small"), specs = _T("Chocolate");
+	CString IceCreamName = _T("Ice Cream"), price = _T(""), size = _T("Small"), specs = _T("Chocolate"), totalPrice = _T(""),id=_T("");
 	
 	// What kind has been selected:
 	switch (IceCreamFlavorRd)
@@ -455,18 +458,22 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 	}
 
 
-	//Creating instance of Dessert with the size and kind selected:
+	//Creating instance of IceCream with the size and kind selected:
 	IceCream* OrederedIceCream = new IceCream(IceCreamName,IceCreamSizeOption,IceCreamFlavorOption);
 	MyOrder.addProduct(OrederedIceCream);
-	//AfxMessageBox(_T("IceCream added successfully !"));
-
+	id.Format(_T("%d"), MyOrder.getAmmount());
+	
 	//adding new line to list control
 	nItem = display.InsertItem(0, IceCreamName);
 	price.Format(_T("%g ₪"), OrederedIceCream->getPrice());
 	display.SetItemText(nItem, 1, size);
 	display.SetItemText(nItem, 2, specs);
 	display.SetItemText(nItem, 3, price);
+	display.SetItemText(nItem, 4, id);
 
+	// Update Total Price on Pay Now Button
+	totalPrice.Format(_T("Pay (total: %g₪)"), MyOrder.calculateTotalPrice());
+	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
 // ==================================================================
@@ -508,7 +515,6 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdlarge()
 }
 
 // Yogurt Addons Checkbox handler:
-
 void CIceCreamShopMFCDlg::OnBnClickedOreoaddonchbx()
 {
 	// Oreo CheckBox Selected
@@ -566,13 +572,13 @@ void CIceCreamShopMFCDlg::OnBnClickedPineappleaddonchbx()
 	}
 }
 
-
+// Yogurt Add Button handler:
 void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 {
 	int nItem;
 	sizeOption yogurtSizeOption = S;
 	vector<CString>	yogurtAddons = {};
-	CString YogurtName = _T("Frozen Yogurt"), price = _T(""), size = _T("Small"), specs = _T("No Addons");
+	CString YogurtName = _T("Frozen Yogurt"), price = _T(""), size = _T("Small"), specs = _T("Addons: "), totalPrice = _T(""), id = _T("");
 
 	// What size has been selected:
 	switch (YogurtSizeRd)
@@ -594,30 +600,60 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 	if (OreoAddonChBxSelected)
 	{
 		yogurtAddons.push_back(_T("Oreo"));
+		specs += _T("Oreo ");
 	}
 
 	// Is Sprinkles been selected:
 	if (SprinklesAddonChBxSelected)
 	{
 		yogurtAddons.push_back(_T("Sprinkles"));
+		if (specs != _T("Addons: ")) 
+		{
+			specs += _T(", Sprinkles");
+		}
+		else 
+		{
+			specs += _T("Sprinkles");
+		}
 	}
 
 	// Is Strawberries been selected:
 	if (StrawberriesAddonChBxSelected)
 	{
 		yogurtAddons.push_back(_T("Strawberries"));
+		if (specs != _T("Addons: ")) 
+		{
+			specs += _T(", Strawberries");
+		}
+		else 
+		{
+			specs += _T("Strawberries");
+		}
 	}
 
 	// Is Pineapple been selected:
 	if (PineappleAddonChBxSelected)
 	{
 		yogurtAddons.push_back(_T("Pineapple"));
+		if (specs != _T("Addons: ")) 
+		{
+			specs += _T(", Pineapple");
+		}
+		else 
+		{
+			specs += _T("Pineapple");
+		}
 	}
 	
-	//Creating instance of Dessert with the size and kind selected:
+	if (specs == _T("Addons: ")) 
+	{
+		specs = _T("No Addons");
+	}
+
+	//Creating instance of Yogurt with the size and kind selected:
 	Yogurt* OrederedYogurt = new Yogurt(YogurtName, yogurtSizeOption, yogurtAddons);
 	MyOrder.addProduct(OrederedYogurt);
-	//AfxMessageBox(_T("Yogurt added successfully !"));
+	id.Format(_T("%d"), MyOrder.getAmmount());
 
 	//adding new line to list control
 	nItem = display.InsertItem(0, YogurtName);
@@ -625,7 +661,11 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 	display.SetItemText(nItem, 1, size);
 	display.SetItemText(nItem, 2, specs);
 	display.SetItemText(nItem, 3, price);
-	// TODO: adding the dessert to list to display,
+	display.SetItemText(nItem, 4, id);
+	
+	// Update Total Price on Pay Now Button
+	totalPrice.Format(_T("Pay (total: %g₪)"), MyOrder.calculateTotalPrice());
+	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
 // ==================================================================
