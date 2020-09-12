@@ -39,6 +39,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
+	Order MyOrder;
 	int DessertSizeRd;
 	afx_msg void OnBnClickedDessertsizerdsmall();
 	afx_msg void OnBnClickedDessertsizerdmedium();
@@ -57,4 +58,18 @@ public:
 	afx_msg void OnBnClickedIcsizerdmedium();
 	afx_msg void OnBnClickedIcsizerdlarge();
 	afx_msg void OnBnClickedIcecreamaddbtn();
+	afx_msg void OnBnClickedYogurtsizerdsmall();
+	afx_msg void OnBnClickedYogurtsizerdmedium();
+	afx_msg void OnBnClickedYogurtsizerdlarge();
+	int YogurtSizeRd;
+	afx_msg void OnBnClickedYogurtaddbtn();
+	BOOL OreoAddonChBxSelected;
+	BOOL SprinklesAddonChBxSelected;
+	BOOL StrawberriesAddonChBxSelected;
+	BOOL PineappleAddonChBxSelected;
+	afx_msg void OnBnClickedOreoaddonchbx();
+	afx_msg void OnBnClickedSprinklesaddonchbx();
+	afx_msg void OnBnClickedStrawberriesaddonchbx();
+	afx_msg void OnBnClickedPineappleaddonchbx();
+	CListCtrl display;
 };

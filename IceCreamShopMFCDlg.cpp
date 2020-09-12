@@ -65,6 +65,11 @@ CIceCreamShopMFCDlg::CIceCreamShopMFCDlg(CWnd* pParent /*=nullptr*/)
 	, DessertKindRd(0)
 	, IceCreamFlavorRd(0)
 	, IceCreamSizeRd(0)
+	, YogurtSizeRd(0)
+	, OreoAddonChBxSelected(FALSE)
+	, SprinklesAddonChBxSelected(FALSE)
+	, StrawberriesAddonChBxSelected(FALSE)
+	, PineappleAddonChBxSelected(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -80,6 +85,13 @@ void CIceCreamShopMFCDlg::DoDataExchange(CDataExchange* pDX)
 	DDV_MinMaxInt(pDX, IceCreamFlavorRd, 1, 3);
 	DDX_Radio(pDX, ICSizeRdSmall, IceCreamSizeRd);
 	DDV_MinMaxInt(pDX, IceCreamSizeRd, 1, 3);
+	DDX_Radio(pDX, YogurtSizeRdSmall, YogurtSizeRd);
+	DDV_MinMaxInt(pDX, YogurtSizeRd, 1, 3);
+	DDX_Check(pDX, OreoAddonChBx, OreoAddonChBxSelected);
+	DDX_Check(pDX, SprinklesAddonChBx, SprinklesAddonChBxSelected);
+	DDX_Check(pDX, StrawberriesAddonChBx, StrawberriesAddonChBxSelected);
+	DDX_Check(pDX, PineappleAddonChBx, PineappleAddonChBxSelected);
+	DDX_Control(pDX, IDC_LIST1, display);
 }
 
 BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
@@ -100,6 +112,14 @@ BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
 	ON_BN_CLICKED(ICSizeRdMedium, &CIceCreamShopMFCDlg::OnBnClickedIcsizerdmedium)
 	ON_BN_CLICKED(ICSizeRdLarge, &CIceCreamShopMFCDlg::OnBnClickedIcsizerdlarge)
 	ON_BN_CLICKED(IceCreamAddBtn, &CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn)
+	ON_BN_CLICKED(YogurtSizeRdSmall, &CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdsmall)
+	ON_BN_CLICKED(YogurtSizeRdMedium, &CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdmedium)
+	ON_BN_CLICKED(YogurtSizeRdLarge, &CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdlarge)
+	ON_BN_CLICKED(YogurtAddBtn, &CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn)
+	ON_BN_CLICKED(OreoAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedOreoaddonchbx)
+	ON_BN_CLICKED(SprinklesAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedSprinklesaddonchbx)
+	ON_BN_CLICKED(StrawberriesAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedStrawberriesaddonchbx)
+	ON_BN_CLICKED(PineappleAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedPineappleaddonchbx)
 END_MESSAGE_MAP()
 
 
@@ -135,6 +155,13 @@ BOOL CIceCreamShopMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	
+	display.InsertColumn(0,L"Name",LVCFMT_LEFT,100);
+	display.InsertColumn(1, L"Size", LVCFMT_LEFT, 75);
+	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 275);
+	display.InsertColumn(3, L"Price", LVCFMT_LEFT, 75);
+	
+
 
 	//#############################
 	
@@ -261,20 +288,21 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertkindrdcheesecake()
 // Dessert Add Button handler:
 void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 {
+	int nItem;
 	sizeOption DessertSizeOption = S;
 	dessertOption DessertKindOption = waffle;
-	CString DessertName = _T("General");
+	CString DessertName = _T("Waffle"), price = _T(""), size = _T("Small");
 
 	// What kind has been selected:
 	switch (DessertKindRd)
 	{
 	case 1:
-		DessertKindOption = pancake;
-		DessertName = _T("Pancake");
-		break;
-	case 2:
 		DessertKindOption = waffle;
 		DessertName = _T("Waffle");
+		break;
+	case 2:
+		DessertKindOption = pancake;
+		DessertName = _T("Pancake");
 		break;
 	case 3:
 		DessertKindOption = cheesecake;
@@ -287,18 +315,29 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 	{
 	case 1:
 		DessertSizeOption = S;
+		size = _T("Small");
 		break;
 	case 2:
 		DessertSizeOption = M;
+		size = _T("Medium");
 		break;
 	case 3:
 		DessertSizeOption = L;
+		size = _T("Large");
 		break;
 	}
 
-	//Creating instance of Dessert with the size and kind selected:
-	Dessert OrderedDessert(DessertName, DessertKindOption, DessertSizeOption);
-	AfxMessageBox(_T("Dessert added successfully !"));
+	//Creating instance of Dessert with the size and kind selected and adding to MyOrder
+	Dessert* OrderedDessert = new Dessert(DessertName, DessertKindOption, DessertSizeOption);
+	MyOrder.addProduct(OrderedDessert);
+	
+	//adding new line to list control
+	nItem = display.InsertItem(0, DessertName);
+	price.Format(_T("%g ₪"), OrderedDessert->getPrice());
+	display.SetItemText(nItem, 1, size);
+	display.SetItemText(nItem, 3, price);
+
+	//AfxMessageBox(_T("Dessert added successfully !"));
 
 	// TODO: adding the dessert to list to display,
 
@@ -373,26 +412,28 @@ void CIceCreamShopMFCDlg::OnBnClickedIcsizerdlarge()
 	}
 }
 
+// Dessert Add Button handler:
 void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 {
+	int nItem;
 	sizeOption IceCreamSizeOption = S;
 	flavorOption IceCreamFlavorOption = chocolate;
-	CString IceCreamName = _T("General");
+	CString IceCreamName = _T("Ice Cream"), price = _T(""), size = _T("Small"), specs = _T("Chocolate");
 	
 	// What kind has been selected:
 	switch (IceCreamFlavorRd)
 	{
 	case 1:
 		IceCreamFlavorOption = chocolate;
-		IceCreamName = _T("Chocolate IceCream");
+		specs = _T("Chocolate");
 		break;
 	case 2:
 		IceCreamFlavorOption = vanilla;
-		IceCreamName = _T("Vanilla IceCream");
+		specs = _T("Vanilla");
 		break;
 	case 3:
 		IceCreamFlavorOption = mixed;
-		IceCreamName = _T("Mixed IceCream");
+		specs = _T("Chocolate and Vanilla");
 		break;
 	}
 
@@ -401,21 +442,30 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 	{
 	case 1:
 		IceCreamSizeOption = S;
+		size = _T("Small");
 		break;
 	case 2:
 		IceCreamSizeOption = M;
+		size = _T("Medium");
 		break;
 	case 3:
 		IceCreamSizeOption = L;
+		size = _T("Large");
 		break;
 	}
 
 
 	//Creating instance of Dessert with the size and kind selected:
-	IceCream OrederedIceCream(IceCreamName,IceCreamSizeOption,IceCreamFlavorOption);
-	AfxMessageBox(_T("IceCream added successfully !"));
+	IceCream* OrederedIceCream = new IceCream(IceCreamName,IceCreamSizeOption,IceCreamFlavorOption);
+	MyOrder.addProduct(OrederedIceCream);
+	//AfxMessageBox(_T("IceCream added successfully !"));
 
-	// TODO: adding the dessert to list to display,
+	//adding new line to list control
+	nItem = display.InsertItem(0, IceCreamName);
+	price.Format(_T("%g ₪"), OrederedIceCream->getPrice());
+	display.SetItemText(nItem, 1, size);
+	display.SetItemText(nItem, 2, specs);
+	display.SetItemText(nItem, 3, price);
 
 }
 
@@ -423,4 +473,159 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 
 
 
+// ====================== Yogurt Selection Pane =====================
 
+// Yogurt CupSize Radio handler:
+void CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdsmall()
+{
+	// Yogurt Small Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(YogurtSizeRdSmall);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		YogurtSizeRd = 1;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdmedium()
+{
+	// Yogurt Medium Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(YogurtSizeRdMedium);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		YogurtSizeRd = 2;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedYogurtsizerdlarge()
+{
+	// Yogurt Large Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(YogurtSizeRdLarge);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		YogurtSizeRd = 3;
+	}
+}
+
+// Yogurt Addons Checkbox handler:
+
+void CIceCreamShopMFCDlg::OnBnClickedOreoaddonchbx()
+{
+	// Oreo CheckBox Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(OreoAddonChBx);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		OreoAddonChBxSelected = true;
+	}
+	else
+	{
+		OreoAddonChBxSelected = false;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedSprinklesaddonchbx()
+{
+	// Sprinkles CheckBox Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(SprinklesAddonChBx);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		SprinklesAddonChBxSelected = true;
+	}
+	else
+	{
+		SprinklesAddonChBxSelected = false;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedStrawberriesaddonchbx()
+{
+	// Strawberries CheckBox Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(StrawberriesAddonChBx);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		StrawberriesAddonChBxSelected = true;
+	}
+	else
+	{
+		StrawberriesAddonChBxSelected = false;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedPineappleaddonchbx()
+{
+	// Pineapple CheckBox Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(PineappleAddonChBx);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		PineappleAddonChBxSelected = true;
+	}
+	else
+	{
+		PineappleAddonChBxSelected = false;
+	}
+}
+
+
+void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
+{
+	int nItem;
+	sizeOption yogurtSizeOption = S;
+	vector<CString>	yogurtAddons = {};
+	CString YogurtName = _T("Frozen Yogurt"), price = _T(""), size = _T("Small"), specs = _T("No Addons");
+
+	// What size has been selected:
+	switch (YogurtSizeRd)
+	{
+	case 1:
+		yogurtSizeOption = S;
+		size = _T("Small");
+		break;
+	case 2:
+		yogurtSizeOption = M;
+		size = _T("Medium");
+		break;
+	case 3:
+		yogurtSizeOption = L;
+		size = _T("Large");
+		break;
+	}
+	// Is Oreos been selected:
+	if (OreoAddonChBxSelected)
+	{
+		yogurtAddons.push_back(_T("Oreo"));
+	}
+
+	// Is Sprinkles been selected:
+	if (SprinklesAddonChBxSelected)
+	{
+		yogurtAddons.push_back(_T("Sprinkles"));
+	}
+
+	// Is Strawberries been selected:
+	if (StrawberriesAddonChBxSelected)
+	{
+		yogurtAddons.push_back(_T("Strawberries"));
+	}
+
+	// Is Pineapple been selected:
+	if (PineappleAddonChBxSelected)
+	{
+		yogurtAddons.push_back(_T("Pineapple"));
+	}
+	
+	//Creating instance of Dessert with the size and kind selected:
+	Yogurt* OrederedYogurt = new Yogurt(YogurtName, yogurtSizeOption, yogurtAddons);
+	MyOrder.addProduct(OrederedYogurt);
+	//AfxMessageBox(_T("Yogurt added successfully !"));
+
+	//adding new line to list control
+	nItem = display.InsertItem(0, YogurtName);
+	price.Format(_T("%g ₪"), OrederedYogurt->getPrice());
+	display.SetItemText(nItem, 1, size);
+	display.SetItemText(nItem, 2, specs);
+	display.SetItemText(nItem, 3, price);
+	// TODO: adding the dessert to list to display,
+}
+
+// ==================================================================

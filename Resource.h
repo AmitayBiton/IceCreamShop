@@ -24,6 +24,16 @@
 #define ICSizeRdMedium                  1013
 #define ICSizeRdLarge                   1015
 #define IceCreamAddBtn                  1016
+#define YogurtGrpBx                     1017
+#define YogurtSizeRdSmall               1018
+#define YogurtSizeRdMedium              1019
+#define YogurtSizeRdLarge               1020
+#define YogurtAddBtn                    1021
+#define OreoAddonChBx                   1022
+#define SprinklesAddonChBx              1023
+#define StrawberriesAddonChBx           1024
+#define PineappleAddonChBx              1025
+#define IDC_LIST1                       1026
 
 // Next default values for new objects
 // 
@@ -31,7 +41,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1017
+#define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
