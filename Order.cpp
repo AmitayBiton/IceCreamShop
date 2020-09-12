@@ -40,3 +40,15 @@ void Order::removeProduct(Product* prd)
 	products.erase(remove(products.begin(), products.end(), prd), products.end());
 	ammount--;
 }
+
+Product* Order::getProductById(int id)
+{
+	for (int i = 0; i < products.size();i++) 
+	{
+		if (products[i]->getId() == id) {
+			return products[i];
+		}
+	}
+	return nullptr;
+}
+

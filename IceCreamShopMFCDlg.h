@@ -72,4 +72,6 @@ public:
 	afx_msg void OnBnClickedStrawberriesaddonchbx();
 	afx_msg void OnBnClickedPineappleaddonchbx();
 	CListCtrl display;
+	afx_msg void OnBnClickedDeleteprdbtn();
+	afx_msg void OnBnClickedPaynowbtn();
 };

@@ -25,13 +25,13 @@ class Product
 {
 private:
 	CString name;
-
+	int id;
 public:
 	Product();
 	Product(CString _name);
 	virtual double getPrice() = 0;
 	CString getName();
 	void setName(CString _name);
-
+	int getId();
 };
 

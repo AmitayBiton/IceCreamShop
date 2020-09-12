@@ -18,5 +18,6 @@ public:
 	int getOrderNumber();
 	void addProduct(Product* prd);
 	void removeProduct(Product* prd);
+	Product* getProductById(int id);
 };
 

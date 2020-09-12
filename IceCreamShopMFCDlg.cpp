@@ -120,6 +120,8 @@ BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
 	ON_BN_CLICKED(SprinklesAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedSprinklesaddonchbx)
 	ON_BN_CLICKED(StrawberriesAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedStrawberriesaddonchbx)
 	ON_BN_CLICKED(PineappleAddonChBx, &CIceCreamShopMFCDlg::OnBnClickedPineappleaddonchbx)
+	ON_BN_CLICKED(DeletePrdBtn, &CIceCreamShopMFCDlg::OnBnClickedDeleteprdbtn)
+	ON_BN_CLICKED(PayNowBtn, &CIceCreamShopMFCDlg::OnBnClickedPaynowbtn)
 END_MESSAGE_MAP()
 
 
@@ -156,11 +158,11 @@ BOOL CIceCreamShopMFCDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	
-	display.InsertColumn(0,L"Name",LVCFMT_LEFT,100);
+	display.InsertColumn(0,L"Product Name",LVCFMT_LEFT,100);
 	display.InsertColumn(1, L"Size", LVCFMT_LEFT, 75);
-	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 325);
+	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 400);
 	display.InsertColumn(3, L"Price", LVCFMT_LEFT, 75);
-	display.InsertColumn(4, L"id", LVCFMT_LEFT, 75);
+	display.InsertColumn(4, L"Product id", LVCFMT_LEFT, 75);
 	
 
 
@@ -331,7 +333,7 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 	//Creating instance of Dessert with the size and kind selected and adding to MyOrder
 	Dessert* OrderedDessert = new Dessert(DessertName, DessertKindOption, DessertSizeOption);
 	MyOrder.addProduct(OrderedDessert);
-	id.Format(_T("%d"), MyOrder.getAmmount());
+	id.Format(_T("%d"), OrderedDessert->getId());
 
 	//adding new line to list control
 	nItem = display.InsertItem(0, DessertName);
@@ -341,7 +343,7 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 	display.SetItemText(nItem, 4, id);
 	
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 
 }
@@ -461,7 +463,7 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 	//Creating instance of IceCream with the size and kind selected:
 	IceCream* OrederedIceCream = new IceCream(IceCreamName,IceCreamSizeOption,IceCreamFlavorOption);
 	MyOrder.addProduct(OrederedIceCream);
-	id.Format(_T("%d"), MyOrder.getAmmount());
+	id.Format(_T("%d"), OrederedIceCream->getId());
 	
 	//adding new line to list control
 	nItem = display.InsertItem(0, IceCreamName);
@@ -472,7 +474,7 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 	display.SetItemText(nItem, 4, id);
 
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -653,7 +655,7 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 	//Creating instance of Yogurt with the size and kind selected:
 	Yogurt* OrederedYogurt = new Yogurt(YogurtName, yogurtSizeOption, yogurtAddons);
 	MyOrder.addProduct(OrederedYogurt);
-	id.Format(_T("%d"), MyOrder.getAmmount());
+	id.Format(_T("%d"), OrederedYogurt->getId());
 
 	//adding new line to list control
 	nItem = display.InsertItem(0, YogurtName);
@@ -664,8 +666,42 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 	display.SetItemText(nItem, 4, id);
 	
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
 // ==================================================================
+
+
+// ================== Delete Product Button handler =================
+
+void CIceCreamShopMFCDlg::OnBnClickedDeleteprdbtn()
+{
+	int nItem = -1, i = 0, j = 0, counter = 0, refundCash = 0, id = -1;
+	CString name, price, specs, size;
+	nItem = display.GetNextItem(nItem, LVNI_SELECTED);
+	id = _ttoi(display.GetItemText(nItem, 4));
+	Product* productToDelete = 	MyOrder.getProductById(id);
+	if (productToDelete != nullptr) {
+		MyOrder.removeProduct(productToDelete);
+		display.DeleteItem(nItem);
+	}
+	else {
+		AfxMessageBox(_T("Deleting encountered error: No Product was found."));
+	}
+}
+
+// ==================================================================
+
+void CIceCreamShopMFCDlg::OnBnClickedPaynowbtn()
+{
+	if (MyOrder.getAmmount() == 0) 
+	{
+		AfxMessageBox(_T("No items to purchase, please add one or more items."));
+	}
+	else 
+	{
+		AfxMessageBox(_T("Oreded Completed!, thanks for ordering.\n\nAnd always remember:\n\"Money can't buy you happyness,\nbut it can buy you ICECREAM,\nand this is the same thing!\""));
+	}
+	
+}
