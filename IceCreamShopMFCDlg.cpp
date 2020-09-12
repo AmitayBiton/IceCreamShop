@@ -2,7 +2,13 @@
 // IceCreamShopMFCDlg.cpp : implementation file
 //
 
+#include "Product.h"
+#include "Dessert.h"
+#include "Frozen.h"
 #include "IceCream.h"
+#include "Yogurt.h"
+#include "Order.h"
+using namespace sizesAndKinds;
 
 
 #include "pch.h"
@@ -55,6 +61,8 @@ END_MESSAGE_MAP()
 
 CIceCreamShopMFCDlg::CIceCreamShopMFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_ICECREAMSHOPMFC_DIALOG, pParent)
+	, DessertSizeRd(0)
+	, DessertKindRd(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -62,12 +70,23 @@ CIceCreamShopMFCDlg::CIceCreamShopMFCDlg(CWnd* pParent /*=nullptr*/)
 void CIceCreamShopMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Radio(pDX, DessertSizeRdSmall, DessertSizeRd);
+	DDV_MinMaxInt(pDX, DessertSizeRd, 1, 3);
+	DDX_Radio(pDX, DessertKindRdWaffle, DessertKindRd);
+	DDV_MinMaxInt(pDX, DessertKindRd, 1, 3);
 }
 
 BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(DessertSizeRdSmall, &CIceCreamShopMFCDlg::OnBnClickedDessertsizerdsmall)
+	ON_BN_CLICKED(DessertSizeRdMedium, &CIceCreamShopMFCDlg::OnBnClickedDessertsizerdmedium)
+	ON_BN_CLICKED(DessertSizeRdLarge, &CIceCreamShopMFCDlg::OnBnClickedDessertsizerdlarge)
+	ON_BN_CLICKED(DessertKindRdWaffle, &CIceCreamShopMFCDlg::OnBnClickedDessertkindrdwaffle)
+	ON_BN_CLICKED(DessertKindRdPancake, &CIceCreamShopMFCDlg::OnBnClickedDessertkindrdpancake)
+	ON_BN_CLICKED(DessertKindRdCheesecake, &CIceCreamShopMFCDlg::OnBnClickedDessertkindrdcheesecake)
+	ON_BN_CLICKED(DessertAddBtn, &CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn)
 END_MESSAGE_MAP()
 
 
@@ -160,3 +179,114 @@ HCURSOR CIceCreamShopMFCDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+// Dessert Size Radio handler:
+void CIceCreamShopMFCDlg::OnBnClickedDessertsizerdsmall()
+{
+	// Dessert Small Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(DessertSizeRdSmall);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		DessertSizeRd = 1;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedDessertsizerdmedium()
+{
+	// Dessert Medium Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(DessertSizeRdMedium);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		DessertSizeRd = 2;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedDessertsizerdlarge()
+{
+	// Dessert Large Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(DessertSizeRdLarge);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		DessertSizeRd = 3;
+	}
+}
+
+// Dessert Kind Radio handler:
+void CIceCreamShopMFCDlg::OnBnClickedDessertkindrdwaffle()
+{
+	// Dessert Waffle Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(DessertKindRdWaffle);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		DessertKindRd = 1;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedDessertkindrdpancake()
+{
+	// Dessert Pancake Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(DessertKindRdPancake);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		DessertKindRd = 2;
+	}
+}
+void CIceCreamShopMFCDlg::OnBnClickedDessertkindrdcheesecake()
+{
+	// Dessert Cheesecake Radio Selected
+	CButton* m_ctlCheck = (CButton*)GetDlgItem(DessertKindRdCheesecake);
+	int ChkBox = m_ctlCheck->GetCheck();
+	if (ChkBox == BST_CHECKED)
+	{
+		DessertKindRd = 3;
+	}
+}
+
+// Dessert Add Button handler:
+
+void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
+{
+	sizeOption DessertSizeOption = S;
+	dessertOption DessertKindOption = waffle;
+	CString DessertName = _T("General");
+
+	// What size has been selected:
+	switch (DessertSizeRd)
+	{
+	case 1:
+		DessertSizeOption = S;
+		break;
+	case 2:
+		DessertSizeOption = M;
+		break;
+	case 3:
+		DessertSizeOption = L;
+		break;
+	}
+
+	// What kind has been selected:
+	switch (DessertKindRd)
+	{
+	case 1:
+		DessertKindOption = pancake;
+		DessertName = _T("Pancake");
+		break;
+	case 2:
+		DessertKindOption = waffle;
+		DessertName = _T("Waffle");
+		break;
+	case 3:
+		DessertKindOption = cheesecake;
+		DessertName = _T("CheeseCake");
+		break;
+	}
+
+	//Creating instance of Dessert with the size and kind selected:
+	Dessert ds(DessertName, DessertKindOption, DessertSizeOption);
+	AfxMessageBox(_T("Dessert added successfully !"));
+
+	// TODO: adding the dessert to list to display,
+
+}

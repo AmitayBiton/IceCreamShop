@@ -4,6 +4,13 @@
 
 #pragma once
 
+#include "Product.h"
+#include "Dessert.h"
+#include "Frozen.h"
+#include "IceCream.h"
+#include "Yogurt.h"
+#include "Order.h"
+using namespace sizesAndKinds;
 
 // CIceCreamShopMFCDlg dialog
 class CIceCreamShopMFCDlg : public CDialogEx
@@ -31,4 +38,14 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	int DessertSizeRd;
+	afx_msg void OnBnClickedDessertsizerdsmall();
+	afx_msg void OnBnClickedDessertsizerdmedium();
+	afx_msg void OnBnClickedDessertsizerdlarge();
+	int DessertKindRd;
+	afx_msg void OnBnClickedDessertkindrdwaffle();
+	afx_msg void OnBnClickedDessertkindrdpancake();
+	afx_msg void OnBnClickedDessertkindrdcheesecake();
+	afx_msg void OnBnClickedDessertaddbtn();
 };
