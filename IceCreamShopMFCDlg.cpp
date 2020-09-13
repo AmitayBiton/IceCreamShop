@@ -164,8 +164,8 @@ BOOL CIceCreamShopMFCDlg::OnInitDialog()
 	
 	display.InsertColumn(0,L"Product Name",LVCFMT_LEFT,100);
 	display.InsertColumn(1, L"Size", LVCFMT_LEFT, 75);
-	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 400);
-	display.InsertColumn(3, L"Price", LVCFMT_LEFT, 75);
+	display.InsertColumn(2, L"Specs", LVCFMT_LEFT, 300);
+	display.InsertColumn(3, L"Price", LVCFMT_LEFT, 50);
 	display.InsertColumn(4, L"Product id", LVCFMT_LEFT, 75);
 	
 
@@ -700,8 +700,6 @@ void CIceCreamShopMFCDlg::OnBnClickedDeleteprdbtn()
 }
 
 // ==================================================================
-
-
 
 
 // ================== Modify Product Button handler =================
