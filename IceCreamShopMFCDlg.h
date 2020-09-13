@@ -74,4 +74,10 @@ public:
 	CListCtrl display;
 	afx_msg void OnBnClickedDeleteprdbtn();
 	afx_msg void OnBnClickedPaynowbtn();
+	afx_msg void OnBnClickedModifyprdbtn();
+	int PrdIdToModify = -1;
+	int nItemToModify = -1;
+	afx_msg void OnBnClickedModifydessertbtn();
+	afx_msg void OnBnClickedModifyicecreambtn();
+	afx_msg void OnBnClickedModifyyogurtbtn();
 };

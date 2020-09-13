@@ -13,5 +13,6 @@ public:
 	IceCream(CString _name, sizeOption _cupSize, flavorOption _flavor);
 	flavorOption getFlavor();
 	virtual double getPrice();
+	void setFlavor(flavorOption _flavor);
 };
 

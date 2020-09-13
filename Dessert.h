@@ -15,6 +15,8 @@ public:
 	Dessert(CString _name, dessertOption _kind, sizeOption _size);
 	virtual double getPrice();
 	sizeOption getSize();
+	dessertOption getKind();
 	void setSize(sizeOption _size);
+	void setKind(dessertOption _kind);
 };
 

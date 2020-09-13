@@ -26,9 +26,19 @@ sizeOption Dessert::getSize()
 	return size;
 }
 
+dessertOption Dessert::getKind()
+{
+	return kind;
+}
+
 void Dessert::setSize(sizeOption _size)
 {
 	size = _size;
+}
+
+void Dessert::setKind(dessertOption _kind)
+{
+	kind = _kind;
 }
 
 double Dessert::getPrice()

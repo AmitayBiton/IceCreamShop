@@ -53,3 +53,8 @@ double IceCream::getPrice()
 		break;
 	}
 }
+
+void IceCream::setFlavor(flavorOption _flavor)
+{
+	flavor = _flavor;
+}

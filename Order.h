@@ -1,5 +1,11 @@
 #pragma once
+
 #include "Product.h"
+#include "Dessert.h"
+#include "Frozen.h"
+#include "IceCream.h"
+#include "Yogurt.h"
+
 #include <vector>
 
 using namespace std;
@@ -19,5 +25,6 @@ public:
 	void addProduct(Product* prd);
 	void removeProduct(Product* prd);
 	Product* getProductById(int id);
+	//Dessert* getDessertById(int id);
 };
 
