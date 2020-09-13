@@ -343,13 +343,13 @@ void CIceCreamShopMFCDlg::OnBnClickedDessertaddbtn()
 
 	//adding new line to list control
 	nItem = display.InsertItem(0, DessertName);
-	price.Format(_T("%g ₪"), OrderedDessert->getPrice());
+	price.Format(_T("%g nis"), OrderedDessert->getPrice());
 	display.SetItemText(nItem, 1, size);
 	display.SetItemText(nItem, 3, price);
 	display.SetItemText(nItem, 4, id);
 	
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 
 }
@@ -698,7 +698,7 @@ void CIceCreamShopMFCDlg::OnBnClickedDeleteprdbtn()
 	}
 	
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -925,7 +925,7 @@ void CIceCreamShopMFCDlg::OnBnClickedModifydessertbtn()
 	}
 
 	//changing price on display
-	newPrice.Format(_T("%g ₪"), DessertToModify->getPrice());
+	newPrice.Format(_T("%g nis"), DessertToModify->getPrice());
 	display.SetItemText(nItemToModify, 3, newPrice);
 
 	GetDlgItem(DeletePrdBtn)->EnableWindow(TRUE);
@@ -936,7 +936,7 @@ void CIceCreamShopMFCDlg::OnBnClickedModifydessertbtn()
 	GetDlgItem(DessertAddBtn)->EnableWindow(TRUE);
 
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -981,7 +981,7 @@ void CIceCreamShopMFCDlg::OnBnClickedModifyicecreambtn()
 	}
 
 	//changing price on display
-	newPrice.Format(_T("%g ₪"), IceCreamToModify->getPrice());
+	newPrice.Format(_T("%g nis"), IceCreamToModify->getPrice());
 	display.SetItemText(nItemToModify, 3, newPrice);
 
 	GetDlgItem(DeletePrdBtn)->EnableWindow(TRUE);
@@ -992,7 +992,7 @@ void CIceCreamShopMFCDlg::OnBnClickedModifyicecreambtn()
 	GetDlgItem(YogurtAddBtn)->EnableWindow(TRUE);
 
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -1085,7 +1085,7 @@ void CIceCreamShopMFCDlg::OnBnClickedModifyyogurtbtn()
 	GetDlgItem(YogurtAddBtn)->EnableWindow(TRUE);
 
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -1123,7 +1123,7 @@ void CIceCreamShopMFCDlg::OnBnClickedSaveorderbtn()
 			CString fullPathName = mySelectFolderDialog.GetPathName();
 			FileHandler::exportOrderToFile(&MyOrder, fullPathName);
 
-			CString finalMessage = _T("Your Order been saved to ") + fullPathName + _T(" successfully.\nYou can load it any time by clicking on 'Save order for later' button.");
+			CString finalMessage = _T("Your Order been saved to ") + fullPathName + _T(" successfully.\nYou can load it any time by clicking on 'Load saved order' button.");
 			MessageBox(finalMessage);
 		}
 	}
@@ -1317,6 +1317,10 @@ void CIceCreamShopMFCDlg::updateDisplay()
 			display.SetItemText(nItem, 4, id);
 		}
 	}
+	// Update Total Price on Pay Now Button
+	CString totalPrice=_T("");
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
+	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
 
