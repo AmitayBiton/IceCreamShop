@@ -18,4 +18,5 @@ public:
 	virtual double getPrice();
 	void addAddons(CString add);
 	void removeAddons(CString add);
+	BOOL hasAddon(CString _addon);
 };

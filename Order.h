@@ -25,6 +25,6 @@ public:
 	void addProduct(Product* prd);
 	void removeProduct(Product* prd);
 	Product* getProductById(int id);
-	//Dessert* getDessertById(int id);
+	vector<Product*> getAllProducts();
 };
 

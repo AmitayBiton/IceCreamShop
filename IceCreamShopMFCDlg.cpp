@@ -1,15 +1,16 @@
 
 // IceCreamShopMFCDlg.cpp : implementation file
 //
-
+#include "FileHandler.h"
+#include <fstream>
 #include "Product.h"
 #include "Dessert.h"
 #include "Frozen.h"
 #include "IceCream.h"
 #include "Yogurt.h"
 #include "Order.h"
-using namespace sizesAndKinds;
 
+using namespace sizesAndKinds;
 
 #include "pch.h"
 #include "framework.h"
@@ -126,6 +127,8 @@ BEGIN_MESSAGE_MAP(CIceCreamShopMFCDlg, CDialogEx)
 	ON_BN_CLICKED(ModifyDessertBtn, &CIceCreamShopMFCDlg::OnBnClickedModifydessertbtn)
 	ON_BN_CLICKED(ModifyIceCreamBtn, &CIceCreamShopMFCDlg::OnBnClickedModifyicecreambtn)
 	ON_BN_CLICKED(ModifyYogurtBtn, &CIceCreamShopMFCDlg::OnBnClickedModifyyogurtbtn)
+	ON_BN_CLICKED(SaveOrderBtn, &CIceCreamShopMFCDlg::OnBnClickedSaveorderbtn)
+	ON_BN_CLICKED(LoadOrderBtn, &CIceCreamShopMFCDlg::OnBnClickedLoadorderbtn)
 END_MESSAGE_MAP()
 
 
@@ -168,7 +171,6 @@ BOOL CIceCreamShopMFCDlg::OnInitDialog()
 	display.InsertColumn(3, L"Price", LVCFMT_LEFT, 50);
 	display.InsertColumn(4, L"Product id", LVCFMT_LEFT, 75);
 	
-
 
 	//#############################
 	
@@ -421,7 +423,7 @@ void CIceCreamShopMFCDlg::OnBnClickedIcsizerdlarge()
 	}
 }
 
-// Dessert Add Button handler:
+// IceCream Add Button handler:
 void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 {
 	int nItem = -1;
@@ -471,14 +473,14 @@ void CIceCreamShopMFCDlg::OnBnClickedIcecreamaddbtn()
 	
 	//adding new line to list control
 	nItem = display.InsertItem(0, IceCreamName);
-	price.Format(_T("%g ₪"), OrederedIceCream->getPrice());
+	price.Format(_T("%g nis"), OrederedIceCream->getPrice());
 	display.SetItemText(nItem, 1, size);
 	display.SetItemText(nItem, 2, specs);
 	display.SetItemText(nItem, 3, price);
 	display.SetItemText(nItem, 4, id);
 
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -602,6 +604,7 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 		size = _T("Large");
 		break;
 	}
+	
 	// Is Oreos been selected:
 	if (OreoAddonChBxSelected)
 	{
@@ -663,14 +666,14 @@ void CIceCreamShopMFCDlg::OnBnClickedYogurtaddbtn()
 
 	//adding new line to list control
 	nItem = display.InsertItem(0, YogurtName);
-	price.Format(_T("%g ₪"), OrederedYogurt->getPrice());
+	price.Format(_T("%g nis"), OrederedYogurt->getPrice());
 	display.SetItemText(nItem, 1, size);
 	display.SetItemText(nItem, 2, specs);
 	display.SetItemText(nItem, 3, price);
 	display.SetItemText(nItem, 4, id);
 	
 	// Update Total Price on Pay Now Button
-	totalPrice.Format(_T("Pay (total: %g ₪)"), MyOrder.calculateTotalPrice());
+	totalPrice.Format(_T("Pay (total: %g nis)"), MyOrder.calculateTotalPrice());
 	GetDlgItem(PayNowBtn)->SetWindowText(totalPrice);
 }
 
@@ -1099,8 +1102,222 @@ void CIceCreamShopMFCDlg::OnBnClickedPaynowbtn()
 	}
 	else
 	{
-		AfxMessageBox(_T("Oreded Completed!, thanks for ordering.\n\nAnd always remember:\n\"Money can't buy you happyness,\nbut it can buy you ICECREAM,\nand it basically the same thing!\""));
+		MessageBox(_T("Oreded Completed!, thanks for ordering.\n\nAnd always remember:\n\"Money can't buy you happyness,\nbut it can buy you ICECREAM,\nand it is basically the same thing!\""));
 	}
 
 }
+// ==================================================================
+
+
+// ================== Save and Load Button handler ==================
+
+// Save Order Button:
+void CIceCreamShopMFCDlg::OnBnClickedSaveorderbtn()
+{
+	if(MyOrder.getAmmount() != 0)
+	{
+		char strFilter[] = { "IceCream Order Files Files (*.icof)|*.icof|" };
+		CFileDialog mySelectFolderDialog(FALSE, CString(".txt"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, CString(strFilter));
+		if (mySelectFolderDialog.DoModal() == IDOK)
+		{
+			CString fullPathName = mySelectFolderDialog.GetPathName();
+			FileHandler::exportOrderToFile(&MyOrder, fullPathName);
+
+			CString finalMessage = _T("Your Order been saved to ") + fullPathName + _T(" successfully.\nYou can load it any time by clicking on 'Save order for later' button.");
+			MessageBox(finalMessage);
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("Your order is currently empty, please add one or more items."));
+	}
+	
+}
+
+// Load Order Button:
+void CIceCreamShopMFCDlg::OnBnClickedLoadorderbtn()
+{
+	int isCartEmpty = MyOrder.getAmmount();
+	if (isCartEmpty == 0) 
+	{
+		char strFilter[] = { "IceCream Order Files Files (*.icof)|*.icof|" };
+		CFileDialog myOpenFileDialog(TRUE, CString(".txt"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, CString(strFilter));
+		if (myOpenFileDialog.DoModal() == IDOK)
+		{
+			if (myOpenFileDialog.GetFileExt() == _T("icof"))
+			{
+
+				CString fullPathName = myOpenFileDialog.GetPathName();
+				if (FileHandler::importFromFile(&MyOrder, fullPathName))
+				{
+					updateDisplay();
+					MessageBox(_T("Your order was loaded successfully.\nYou may modify it or continue to checkout."));
+				}
+				else
+				{
+					AfxMessageBox(_T("Could not open file specified"));
+				}
+
+			}
+			else
+			{
+				AfxMessageBox(_T("File format is ileagal. You must select a '.icof' file."));
+			}
+		}
+	}
+	else {
+		AfxMessageBox(_T("To load a saved order your cart must be empty, please empty your cart first."));
+	}
+}
+
+void CIceCreamShopMFCDlg::updateDisplay()
+{
+	int nItem = -1;
+	vector<Product*> allProducts = MyOrder.getAllProducts();
+	for (int i = 0; i < allProducts.size(); i++) {
+		if (allProducts[i]->getName() == _T("Ice Cream")) {
+			CString price = _T(""), cupSize = _T(""), specs = _T(""), id = _T("");
+			// cupsize:
+			switch (((IceCream*)allProducts[i])->getCupSize())
+			{
+			case 1:
+				cupSize = _T("Small");
+				break;
+			case 2:
+				cupSize = _T("Medium");
+				break;
+			case 3:
+				cupSize = _T("Large");
+				break;
+			}
+			// flavor:
+			switch (((IceCream*)allProducts[i])->getFlavor())
+			{
+			case 1:
+				specs = _T("Chocolate");
+				break;
+			case 2:
+				specs = _T("Vanilla");
+				break;
+			case 3:
+				specs = _T("Chocolate and Vanilla");
+				break;
+			}
+			// price:
+			price.Format(_T("%g nis"), ((IceCream*)allProducts[i])->getPrice());
+			// id:
+			id.Format(_T("%d"), allProducts[i]->getId());
+			nItem = display.InsertItem(0, _T("Ice Cream"));
+			display.SetItemText(nItem, 1, cupSize);
+			display.SetItemText(nItem, 2, specs);
+			display.SetItemText(nItem, 3, price);
+			display.SetItemText(nItem, 4, id);
+		}
+
+		if (allProducts[i]->getName() == _T("Frozen Yogurt")) {
+			CString price = _T(""), cupSize = _T(""), specs = _T("Addons: "), id = _T("");
+			// cupsize:
+			switch (((Yogurt*)allProducts[i])->getCupSize())
+			{
+			case 1:
+				cupSize = _T("Small");
+				break;
+			case 2:
+				cupSize = _T("Medium");
+				break;
+			case 3:
+				cupSize = _T("Large");
+				break;
+			}
+			// Addons:
+			// Is Oreos been selected:
+			if (((Yogurt*)allProducts[i])->hasAddon(_T("Oreo")))
+			{
+				specs += _T("Oreo ");
+			}
+
+			// Is Sprinkles been selected:
+			if (((Yogurt*)allProducts[i])->hasAddon(_T("Sprinkles")))
+			{
+				if (specs != _T("Addons: "))
+				{
+					specs += _T(", Sprinkles");
+				}
+				else
+				{
+					specs += _T("Sprinkles");
+				}
+			}
+
+			// Is Strawberries been selected:
+			if (((Yogurt*)allProducts[i])->hasAddon(_T("Strawberries")))
+			{
+				if (specs != _T("Addons: "))
+				{
+					specs += _T(", Strawberries");
+				}
+				else
+				{
+					specs += _T("Strawberries");
+				}
+			}
+
+			// Is Pineapple been selected:
+			if (((Yogurt*)allProducts[i])->hasAddon(_T("Pineapple")))
+			{
+				if (specs != _T("Addons: "))
+				{
+					specs += _T(", Pineapple");
+				}
+				else
+				{
+					specs += _T("Pineapple");
+				}
+			}
+
+			
+			// price:
+			price.Format(_T("%g nis"), ((Yogurt*)allProducts[i])->getPrice());
+			// id:
+			id.Format(_T("%d"), allProducts[i]->getId());
+			nItem = display.InsertItem(0, _T("Frozen Yogurt"));
+			display.SetItemText(nItem, 1, cupSize);
+			display.SetItemText(nItem, 2, specs);
+			display.SetItemText(nItem, 3, price);
+			display.SetItemText(nItem, 4, id);
+		}
+
+		if (allProducts[i]->getName() == _T("Waffle") || allProducts[i]->getName() == _T("Pancake") || allProducts[i]->getName() == _T("CheeseCake")) {
+			CString price = _T(""), Size = _T(""), id = _T(""), DessertName = _T("");
+			
+			// size:
+			switch (((Dessert*)allProducts[i])->getSize())
+			{
+			case 1:
+				Size = _T("Small");
+				break;
+			case 2:
+				Size = _T("Medium");
+				break;
+			case 3:
+				Size = _T("Large");
+				break;
+			}
+			// name:
+
+			DessertName = ((Dessert*)allProducts[i])->getName();
+
+			// price:
+			price.Format(_T("%g nis"), ((Dessert*)allProducts[i])->getPrice());
+			// id:
+			id.Format(_T("%d"), allProducts[i]->getId());
+			nItem = display.InsertItem(0, DessertName);
+			display.SetItemText(nItem, 1, Size);
+			display.SetItemText(nItem, 3, price);
+			display.SetItemText(nItem, 4, id);
+		}
+	}
+}
+
+
 // ==================================================================

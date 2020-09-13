@@ -5,7 +5,7 @@ Order::Order()
 {
 	products = {};
 	ammount = 0;
-	OrderNumber = rand() % 10000;
+	OrderNumber = rand() % 1000000;
 }
 
 double Order::calculateTotalPrice()
@@ -50,5 +50,10 @@ Product* Order::getProductById(int id)
 		}
 	}
 	return nullptr;
+}
+
+vector<Product*> Order::getAllProducts()
+{
+	return products;
 }
 

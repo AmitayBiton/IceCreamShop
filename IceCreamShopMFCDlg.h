@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "FileHandler.h"
 #include "Product.h"
 #include "Dessert.h"
 #include "Frozen.h"
@@ -80,4 +80,7 @@ public:
 	afx_msg void OnBnClickedModifydessertbtn();
 	afx_msg void OnBnClickedModifyicecreambtn();
 	afx_msg void OnBnClickedModifyyogurtbtn();
+	afx_msg void OnBnClickedSaveorderbtn();
+	afx_msg void OnBnClickedLoadorderbtn();
+	void updateDisplay();
 };

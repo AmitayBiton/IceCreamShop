@@ -56,3 +56,11 @@ void Yogurt::removeAddons(CString add)
 {
 	addons.erase(remove(addons.begin(), addons.end(), add), addons.end());
 }
+
+BOOL Yogurt::hasAddon(CString _addon)
+{
+	if (find(addons.begin(), addons.end(), _addon) != addons.end()) {
+		return true;
+	}
+	return false;
+}

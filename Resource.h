@@ -47,7 +47,6 @@
 #define ModifyIceCreamBtn               1037
 #define ModifyYogurtBtn                 1038
 #define SaveOrderBtn                    1039
-#define IDC_BUTTON4                     1041
 #define LoadOrderBtn                    1041
 
 // Next default values for new objects
