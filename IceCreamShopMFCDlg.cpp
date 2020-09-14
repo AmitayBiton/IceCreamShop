@@ -1275,7 +1275,12 @@ void CIceCreamShopMFCDlg::updateDisplay()
 				}
 			}
 
-			
+
+			if (specs == _T("Addons: "))
+			{
+				specs = _T("No Addons");
+			}
+
 			// price:
 			price.Format(_T("%g nis"), ((Yogurt*)allProducts[i])->getPrice());
 			// id:
